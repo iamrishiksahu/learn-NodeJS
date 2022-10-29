@@ -53,6 +53,8 @@ const server = http.createServer((req, res) => {
     }
 
     */
+    
+   /* Creating a DYNAMIC SERVER */
 
     const extension = path.extname(req.url)
 
