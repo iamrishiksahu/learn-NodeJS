@@ -53,8 +53,6 @@ const server = http.createServer((req,  res) => {
     }
 
     */
-    
-   /* Creating a DYNAMIC SERVER */
 
     /* Creating a DYNAMIC SERVER */
 

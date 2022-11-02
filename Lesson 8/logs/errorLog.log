@@ -1,0 +1,6 @@
+29102022	21:59:07	d6a63b9e-25b1-4b9a-a356-8eddaa9717f9	Error	Not allowed by CORS
+29102022	21:59:22	d7552858-bdea-4e3b-a96f-65433995ea3b	Error	Not allowed by CORS
+29102022	22:38:05	47518823-fdf1-4802-866a-d1b24df6a379	ReferenceError	path is not defined
+29102022	22:38:08	33a27743-8fa4-4bb1-ba61-a4808c6f1eaf	ReferenceError	path is not defined
+29102022	22:38:33	7b2f4fd2-3fe6-4f60-9e9e-3461def08873	ReferenceError	path is not defined
+29102022	22:39:02	cb86ccd7-9658-4fc0-85fe-d541ec8b1375	Error	ENOENT: no such file or directory, stat 'E:\Study\Programming\Web Development\Learn NodeJS\Lesson 8\routes\views\index.html'
