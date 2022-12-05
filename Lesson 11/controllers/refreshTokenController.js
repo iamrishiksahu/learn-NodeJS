@@ -9,12 +9,12 @@ const handleRefreshToken = (req, res) => {
 
     const cookies = req.cookies;
 
-    if(!cookies?.jwt) {
+    if (!cookies?.jwt) {
         // Checking if there is cookie and it has a jwt property
-        return res.sendStatus(401); 
+        return res.sendStatus(401);
     }
 
-    
+
     const refreshToken = cookies.jwt;
 
     const foundUser = userDB.users.find((person) => person.refreshToken === refreshToken)
@@ -32,21 +32,26 @@ const handleRefreshToken = (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
 
-            if( err || foundUser.username !== decoded.username ){
+            if (err || foundUser.username !== decoded.username) {
                 return res.sendStatus(403);
             }
             const accessToken = jwt.sign(
-                {"username" : decoded.username},
+                {
+                    "UserInfo": {
+                        "username": foundUser.username,
+                        "roles": roles
+                    }
+                },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "30s"}
+                { expiresIn: "30s" }
             );
 
-            res.json( { accessToken } )
+            res.json({ accessToken })
 
         }
     )
 
-   
+
 
 }
 
