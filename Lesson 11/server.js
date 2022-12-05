@@ -1,9 +1,13 @@
 const express = require('express')
+require('dotenv').config()
 const path = require('path')
 const {logEvents, logger} = require('./middleware/logEvents')
 const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
+const cookiePasrser = require('cookie-parser')
+const verifyJWT = require('./middleware/verifyJWT');
 const corsOption = require('./config/corsConfig');
+const credentials = require('./middleware/credentials');
 
 const PORT = process.env.PORT || 3500
 const app = express();
@@ -12,6 +16,10 @@ const app = express();
 
 /** Custom Middleware to Log each and every request*/
 app.use(logger) //passing the logger function inside the middleware to handle the situation in some other file
+
+/** Handle options credential check - before CORS
+ * and fetch cookies credentail requirements. */
+app.use(credentials)
 
 /** Cross origin resource sharing */
 app.use(cors(corsOption))
@@ -24,6 +32,9 @@ app.use(express.urlencoded({ extended: false }))
 // built-in middleware for json
 app.use(express.json())
 
+// Middleware for cookies
+app.use(cookiePasrser())
+
 // to serve static files
 app.use('/', express.static(path.join(__dirname, '/public')))
     
@@ -32,6 +43,11 @@ app.use('/', express.static(path.join(__dirname, '/public')))
 app.use('/', require('./routes/root'))
 app.use('/register', require('./routes/register'))
 app.use('/auth', require('./routes/auth'))
+app.use('/refresh', require('./routes/refresh'))
+app.use('/logout', require('./routes/logout'))
+
+app.use(verifyJWT);
+//Everything after this line will use verfiyJWT first before doing anything
 app.use('/employees', require('./routes/api/employees'))
 
 

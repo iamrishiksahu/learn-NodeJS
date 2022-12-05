@@ -1,4 +1,5 @@
-const whitelist = ['https://www.google.com', 'https://www.rishiksahu.in', 'http://localhost:3500']
+const whitelist = require('../config/allowedOrigins');
+
 const corsOption = {
     origin: (origin, callback) => {
         if(whitelist.indexOf(origin) !== -1 || !origin ) {
@@ -10,4 +11,4 @@ const corsOption = {
     optionsSuccessStatus: 200
 }
 
-module.exports = corsOption
+module.exports = corsOption, whitelist
