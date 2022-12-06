@@ -8,9 +8,14 @@ const cookiePasrser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT');
 const corsOption = require('./config/corsConfig');
 const credentials = require('./middleware/credentials');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbCon');
 
 const PORT = process.env.PORT || 3500
 const app = express();
+ 
+// Connecting to Databse
+connectDB();
 
 /** Express Handles Routes & Middlewares in a Top to Bottom manner */
 
@@ -65,7 +70,14 @@ app.all('*', (req, res) => {
 // If nothing works above, we handle the error here
 app.use(errorHandler)
 
-app.listen(PORT, () => {
-    console.log(`The server is running at port ${PORT}`);
+
+// We want to listen for requests only if we have succesfully connected to the database.
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB');
+
+    app.listen(PORT, () => {
+        console.log(`The server is running at port ${PORT}`);
+    })
 })
+
 
