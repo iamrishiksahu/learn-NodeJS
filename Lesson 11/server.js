@@ -51,6 +51,17 @@ app.use('/auth', require('./routes/auth'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/logout', require('./routes/logout'))
 
+/** This is will force any route after this to go through the JWT authentication
+ * 
+ * Hence, The user need to get authenticated even to visit 404
+ * So we need to make a special super route for accessing protected routes like: 
+ * /user/  or  /api/  something like this to identify which routes are to be protected
+ * 
+ * for that: app.use('/user', verifyJWT)
+ * 
+ * Now rest other routes below it shall not be required to be authenticated.
+ */
+
 app.use(verifyJWT);
 //Everything after this line will use verfiyJWT first before doing anything
 app.use('/employees', require('./routes/api/employees'))

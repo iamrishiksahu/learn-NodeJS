@@ -4,3 +4,4 @@
 29102022	22:38:08	33a27743-8fa4-4bb1-ba61-a4808c6f1eaf	ReferenceError	path is not defined
 29102022	22:38:33	7b2f4fd2-3fe6-4f60-9e9e-3461def08873	ReferenceError	path is not defined
 29102022	22:39:02	cb86ccd7-9658-4fc0-85fe-d541ec8b1375	Error	ENOENT: no such file or directory, stat 'E:\Study\Programming\Web Development\Learn NodeJS\Lesson 8\routes\views\index.html'
+07122022	14:55:36	56cf9c88-2c9c-4b8e-b9a6-722d2fd2975b	SyntaxError	Unexpected string in JSON at position 18

@@ -3,9 +3,6 @@ const router = express.Router()
 
 const {handleNewUser} = require('../controllers/registerController');
 
-router.route('/')
-    .post( handleNewUser )
-
-
+router.route('/').post( handleNewUser )
 
 module.exports = router

@@ -1,11 +1,9 @@
-const userDB = {
-    users: require('../../Lesson 11/model/user.json'),
-    setUsers: function (data) { this.users = data }
-}
+const User = require('../model/User');
+
 const jwt = require('jsonwebtoken');
 
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
 
     const cookies = req.cookies;
 
@@ -17,7 +15,7 @@ const handleRefreshToken = (req, res) => {
 
     const refreshToken = cookies.jwt;
 
-    const foundUser = userDB.users.find((person) => person.refreshToken === refreshToken)
+    const foundUser =  await User.findOne({refreshToken: refreshToken}).exec()
 
     if (!foundUser) {
         return res.status(403).json({ "message:": "User does not exist!" });
@@ -39,7 +37,7 @@ const handleRefreshToken = (req, res) => {
                 {
                     "UserInfo": {
                         "username": foundUser.username,
-                        "roles": roles
+                        "roles": foundUser.roles
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,

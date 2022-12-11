@@ -1,10 +1,5 @@
-const userDB = {
-    users: require('../../Lesson 11/model/user.json'),
-    setUsers: function (data) { this.users = data }
-}
+const User = require('../model/User');
 
-const fsPromises = require('fs').promises;
-const path = require('path')
 
 const handleLogout = async (req, res) => {
     // On client => also delete the access token
@@ -19,7 +14,7 @@ const handleLogout = async (req, res) => {
     const refreshToken = cookies.jwt;
 
     // IS refresh token is in DB?
-    const foundUser = userDB.users.find((person) => person.refreshToken === refreshToken)
+    const foundUser =  await User.findOne({refreshToken: refreshToken}).exec()
 
     if (!foundUser) {
 
@@ -30,17 +25,10 @@ const handleLogout = async (req, res) => {
 
     // Delete the refresh token from the database
 
-    const otherUsers = userDB.users.filter(person => person.refreshToken !== foundUser.refreshToken);
+    foundUser.refreshToken = '';
+    const result = await foundUser.save();
 
-    const currentUser = {...foundUser, refreshToken: ''};
-
-  
-    userDB.setUsers([...otherUsers, currentUser]);
-
-    // Writing the changes into the DB
-
-    await fsPromises.writeFile( (path.join(__dirname, '..', 'model', 'user.json')) , JSON.stringify(userDB.users) );
-
+    console.log(result);
 
     res.clearCookie('jwt', { httpOnly: true, secure: true, sameSite: 'None' }) // secure: true => only serves in https (used in production)
     return res.sendStatus(204);

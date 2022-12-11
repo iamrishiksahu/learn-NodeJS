@@ -14,6 +14,7 @@ const handleNewUser = async (req, res) => {
 
     if(duplicate) return res.sendStatus(409)
 
+    
     try{
 
         // encrypt the password

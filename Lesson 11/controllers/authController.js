@@ -1,15 +1,6 @@
-const userDB = {
-    users: require('../../Lesson 11/model/user.json'),
-    setUsers: function (data) { this.users = data }
-}
-
+const User = require('../model/User');
 const bcr = require('bcrypt')
-
 const jwt = require('jsonwebtoken');
-
-require('../model/user.json')
-const fsPromises = require('fs').promises;
-const path = require('path')
 
 
 const handleLogin = async (req, res) => {
@@ -18,7 +9,7 @@ const handleLogin = async (req, res) => {
 
     if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required!' })
 
-    const foundUser = userDB.users.find((person) => person.username === user)
+    const foundUser =  await User.findOne({username: user}).exec()
 
     if (!foundUser) {
         return res.status(401).json({ "message:": "User does not exist!" });
@@ -42,7 +33,7 @@ const handleLogin = async (req, res) => {
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s' }
+            { expiresIn: '600s' }
         );
         const refreshToken = jwt.sign(
 
@@ -53,21 +44,14 @@ const handleLogin = async (req, res) => {
 
 
         //Saving the refresh token into the DB
-        const otherUsers = userDB.users.filter(person => person.username !== foundUser.username);
+        foundUser.refreshToken = refreshToken;
+        const result = await foundUser.save();
 
-        const currentUser = { ...foundUser, refreshToken };
-
-        userDB.setUsers([...otherUsers, currentUser]);
-
-        //Updating the DB with changed data
-        await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'user.json'), JSON.stringify(userDB.users))
-
+        console.log(result);
 
         //Responding to the request
-
-
         //HTTP-Only cookie is not available to JS. So cannot be stolen by hackers
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 }); //1day
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }); //1day
 
         res.status(200).json(
             {
